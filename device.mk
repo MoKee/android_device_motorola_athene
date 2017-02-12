@@ -58,8 +58,7 @@ PRODUCT_COPY_FILES += \
 # Motorola Camera permissions
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/com.motorola.camera.xml:system/etc/permissions/com.motorola.camera.xml \
-    $(LOCAL_PATH)/configs/com.motorola.cameraone.xml:system/etc/permissions/com.motorola.cameraone.xml \
-    $(LOCAL_PATH)/configs/com.motorola.motosignature.xml:system/etc/permissions/com.motorola.motosignature.xml
+    $(LOCAL_PATH)/configs/com.motorola.cameraone.xml:system/etc/permissions/com.motorola.cameraone.xml
 
 # Screen density
 PRODUCT_AAPT_CONFIG := normal
@@ -146,10 +145,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/etc/sap.conf:system/etc/sap.conf \
     $(LOCAL_PATH)/gps/etc/xtwifi.conf:system/etc/xtwifi.conf
 
-# IRQ
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/msm_irqbalance.conf:system/vendor/etc/msm_irqbalance.conf
-
 # IRSC
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
@@ -182,10 +177,15 @@ PRODUCT_COPY_FILES += \
 # OMX
 PRODUCT_PACKAGES += \
     libc2dcolorconvert \
+    libOmxAacDec \
     libOmxAacEnc \
     libOmxAmrEnc \
     libOmxCore \
+    libOmxEvrcDec \
     libOmxEvrcEnc \
+    libOmxFlacDec \
+    libOmxFlacEnc \
+    libOmxQcelp13Dev \
     libOmxQcelp13Enc \
     libOmxSwVencMpeg4 \
     libOmxSwVencHevc \

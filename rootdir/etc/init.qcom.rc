@@ -115,6 +115,21 @@ on boot
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/device/extldo
     chmod 0660 /sys/class/rfkill/rfkill0/device/extldo
 
+    # Mark the copy complete flag to not completed
+    write /data/misc/radio/copy_complete 0
+    chown radio radio /data/misc/radio/copy_complete
+    chmod 0660 /data/misc/radio/copy_complete
+
+    # File flags for prebuilt ril db file
+    write /data/misc/radio/prebuilt_db_support 1
+    chown radio radio /data/misc/radio/prebuilt_db_support
+    chmod 0400 /data/misc/radio/prebuilt_db_support
+    write /data/misc/radio/db_check_done 0
+    chown radio radio /data/misc/radio/db_check_done
+    chmod 0660 /data/misc/radio/db_check_done
+
+    start rmt_storage
+
     # Set graphic node permissions
     chown system graphics /sys/class/graphics/fb0/mdp/bw_mode_bitmap
     chown system graphics /sys/class/graphics/fb0/idle_time
@@ -443,8 +458,6 @@ on post-fs-data
 
     mkdir /data/audio/ 0770 media audio
 
-    setprop vold.post_fs_data_done 1
-
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
 
@@ -521,19 +534,6 @@ on post-fs-data
     # Setup folder for aplogd
     mkdir /data/aplogd 0750 log log
 
-    # Mark the copy complete flag to not completed
-    write /data/misc/radio/copy_complete 0
-    chown radio radio /data/misc/radio/copy_complete
-    chmod 0660 /data/misc/radio/copy_complete
-
-    # File flags for prebuilt ril db file
-    write /data/misc/radio/prebuilt_db_support 1
-    chown radio radio /data/misc/radio/prebuilt_db_support
-    chmod 0400 /data/misc/radio/prebuilt_db_support
-    write /data/misc/radio/db_check_done 0
-    chown radio radio /data/misc/radio/db_check_done
-    chmod 0660 /data/misc/radio/db_check_done
-
     # qti-logkit data
     mkdir /data/misc/qti-logkit/ 0771 system system
     mkdir /data/misc/qti-logkit/shared-privileged/ 2770 system system
@@ -567,6 +567,8 @@ on post-fs-data
 
     # Imager tuning data for camera subsystem
     mkdir /data/misc/imager 0770 camera camera
+
+    setprop vold.post_fs_data_done 1
 
 # Services Start here
 service qfintverify /sbin/qfintverify
@@ -893,12 +895,6 @@ service diag_mdlog_stop /system/bin/diag_mdlog -k
     disabled
     oneshot
 
-# service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
-#     class core
-#     user root
-#    group root
-#     writepid /dev/cpuset/system-background/tasks
-
 service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
     class late_start
     user system
@@ -1158,6 +1154,7 @@ on charger
     mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
     load_all_props
     setprop persist.sys.usb.config mass_storage
+    write /sys/class/leds/white/trigger "battery-full"
 
     trigger early-fs
     trigger fs
